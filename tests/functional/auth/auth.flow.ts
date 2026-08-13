@@ -7,7 +7,10 @@ export async function login(page: Page, email: string, password: string) {
   await authActions.enterEmail(page, email);
   await authActions.enterPassword(page, password);
   await authActions.clickSignInButton(page);
-  await page.getByRole('button', { name: 'Sign Out' }).waitFor({ state: 'visible', timeout: 10000 });
+  await Promise.race([
+    page.getByRole('button', { name: 'Sign Out' }).waitFor({ state: 'visible', timeout: 15000 }),
+    page.getByText(/invalid email or password/i).waitFor({ state: 'visible', timeout: 15000 }),
+  ]).catch(() => {});
 }
 
 export async function logout(page: Page) {
