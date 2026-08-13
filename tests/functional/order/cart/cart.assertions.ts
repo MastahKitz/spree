@@ -3,7 +3,7 @@ import { CartData, CartItemData } from './cart.data';
 
 export async function assertCartDetails(page: Page, cart: CartData) {
   const main = page.getByRole('main');
-  await expect.soft(main.getByRole('heading', { name: 'Shopping Cart', level: 1 })).toBeVisible();
+  await expect.soft(main.getByRole('heading', { name: 'Shopping Cart', level: 1, exact: true })).toBeVisible();
 
   for (const item of cart.items) {
     await assertCartItem(main, item);
@@ -32,14 +32,14 @@ async function assertCartItem(main: Locator, item: CartItemData) {
   const unitPrice = main.locator(`h3:text-is("${product.name}") + p + p`);
   await expect.soft(unitPrice).toHaveText(product.price);
   // quantity
-  const removeButton = main.getByRole('button', { name: `Remove ${product.name}` });
-  const quantityInput = removeButton.locator('xpath=preceding-sibling::div[1]').getByRole('textbox', { name: 'Quantity' });
+  const removeButton = main.getByRole('button', { name: `Remove ${product.name}`, exact: true });
+  const quantityInput = removeButton.locator('xpath=preceding-sibling::div[1]').getByRole('textbox', { name: 'Quantity', exact: true });
   await expect.soft(quantityInput).toHaveValue(String(quantity));
 }
 
 export async function assertCartIsEmpty(page: Page) {
   const main = page.getByRole('main');
 
-  await expect.soft(main.getByRole('heading', { name: 'Your cart is empty', level: 1 })).toBeVisible();
-  await expect.soft(main.getByRole('link', { name: 'Continue Shopping' })).toBeVisible();
+  await expect.soft(main.getByRole('heading', { name: 'Your cart is empty', level: 1, exact: true })).toBeVisible();
+  await expect.soft(main.getByRole('link', { name: 'Continue Shopping', exact: true })).toBeVisible();
 }
