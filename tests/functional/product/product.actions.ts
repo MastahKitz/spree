@@ -1,7 +1,7 @@
 import { Page } from '@playwright/test';
 
 export async function clickAllProductsLink(page: Page) {
-  await page.getByRole('link', { name: 'All Products' }).click();
+  await page.getByRole('dialog').getByRole('link', { name: 'All Products', exact: true }).click();
 }
 
 export async function clickProduct(page: Page, name: string) {

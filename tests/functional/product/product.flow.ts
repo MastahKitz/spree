@@ -3,6 +3,7 @@ import * as productActions from './product.actions';
 import { ProductData } from './product.data';
 
 export async function viewProductDetailsViaAllProducts(page: Page, product: ProductData) {
+  await productActions.clickOpenMenuButton(page);
   await productActions.clickAllProductsLink(page);
   await productActions.clickProduct(page, product.name);
 }
