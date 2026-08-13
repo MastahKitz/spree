@@ -1,5 +1,7 @@
 export interface ProductData {
   name: string;
+  category: string;
+  subcategory: string;
   price: string;
   description: string;
   properties: {
@@ -15,6 +17,8 @@ export interface ProductData {
 
 export const automaticEspressoMachine: ProductData = {
   name: 'Automatic Espresso Machine',
+  category: 'Kitchen',
+  subcategory: 'Coffee Machines',
   price: '$879.99',
   description:
     'Fully automatic bean-to-cup espresso machine with ceramic grinder, 15-bar pressure system, and intuitive touch display. Delivers barista-quality espresso, cappuccino, and latte at the touch of a button.',
