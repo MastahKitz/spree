@@ -3,7 +3,7 @@ import { login, logout } from './auth.flow';
 import { credentials } from '../config/credentials';
 import { assertLoggedIn, assertLoginForm } from './auth.assertions';
 
-test.describe('auth - login', { tag: '@auth' }, () => {
+test.describe('auth', { tag: '@auth' }, () => {
   test.use({ storageState: { cookies: [], origins: [] } });
 
   test('validate user can login with valid credentials', async ({ page }) => {
