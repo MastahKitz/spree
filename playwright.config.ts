@@ -16,8 +16,8 @@ export default defineConfig({
     baseURL: environment.demo.baseUrl,
     storageState: 'auth.json',
     screenshot: 'only-on-failure',
-    video: 'on-first-retry',
-    trace: 'on-first-retry',
+    video: 'retain-on-failure',
+    trace: 'retain-on-failure',
   },
   outputDir: 'test-results',
   projects: [
