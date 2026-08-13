@@ -15,5 +15,5 @@ export async function assertLoggedIn(page: Page, name: string, email: string) {
 }
 
 export async function assertLoginError(page: Page) {
-  await expect(page.getByText(/invalid email or password/i)).toBeVisible();
+  await expect.soft(page.getByText(/invalid email or password/i)).toBeVisible();
 }

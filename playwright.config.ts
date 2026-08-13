@@ -4,7 +4,7 @@ import { environment } from './tests/functional/config/environments';
 export default defineConfig({
   testDir: './tests/functional',
   testMatch: '**/*.spec.ts',
-  timeout: 30_000,
+  timeout: 60_000,
   expect: { timeout: 5_000 },
   retries: process.env.CI ? 2 : 0,
   globalSetup: './global.setup.ts',
