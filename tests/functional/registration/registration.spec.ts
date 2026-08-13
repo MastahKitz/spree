@@ -4,10 +4,12 @@ import { getRegistrationData } from './registration.data';
 import { assertLoggedIn } from '../auth/auth.assertions';
 import { login } from '../auth/auth.flow';
 
+test.describe.configure({ mode: 'serial' });
+
 test.describe('registration', { tag: '@registration' }, () => {
   test.use({ storageState: { cookies: [], origins: [] } });
 
-  const newUserData = getRegistrationData();  
+  const newUserData = getRegistrationData();
 
   test('validate user can register a new account', async ({ page }) => {
     await register(page, newUserData);
