@@ -13,6 +13,11 @@ export async function clickViewCartLink(page: Page) {
   await page.waitForTimeout(2000);  // temporary fix for cart load flakiness
 }
 
+export async function clickFooterCartLink(page: Page) {
+  await page.getByRole('contentinfo').getByRole('link', { name: 'Cart', exact: true }).click();
+  await page.waitForTimeout(2000);
+}
+
 function quantityControls(page: Page, productName: string) {
   const removeButton = page.getByRole('main').getByRole('button', { name: `Remove ${productName}` });
   return removeButton.locator('xpath=preceding-sibling::div[1]');
@@ -61,6 +66,20 @@ export async function clickRemoveItemButton(page: Page, productName: string) {
   const removeButton = page.getByRole('main').getByRole('button', { name: `Remove ${productName}` });
   await clickAndConfirm(
     () => removeButton.click(),
+    () => removeButton.waitFor({ state: 'detached', timeout: 15000 }),
+  );
+}
+
+export function getRemoveButtons(page: Page) {
+  return page.getByRole('main').getByRole('button', { name: /^Remove / });
+}
+
+export async function clickFirstRemoveButton(page: Page) {
+  const first = getRemoveButtons(page).first();
+  const label = await first.getAttribute('aria-label');
+  const removeButton = page.getByRole('main').getByRole('button', { name: label! });
+  await clickAndConfirm(
+    () => first.click(),
     () => removeButton.waitFor({ state: 'detached', timeout: 15000 }),
   );
 }

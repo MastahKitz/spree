@@ -27,7 +27,7 @@ function formatPrice(amount: number): string {
 async function assertCartItem(main: Locator, item: CartItemData) {
   const { product, quantity } = item;
   // name
-  await expect.soft(main.getByRole('heading', { name: product.name, level: 3 })).toBeVisible();
+  await expect.soft(main.getByRole('heading', { name: product.name, level: 3, exact: true })).toBeVisible();
   // price
   const unitPrice = main.locator(`h3:text-is("${product.name}") + p + p`);
   await expect.soft(unitPrice).toHaveText(product.price);

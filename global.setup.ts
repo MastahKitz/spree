@@ -1,6 +1,7 @@
 import { chromium, devices } from '@playwright/test';
 import { environment } from './tests/functional/config/environments';
 import { login } from './tests/functional/auth/auth.flow';
+import { clearCartIfNotEmpty } from './tests/functional/order/cart/carts.flow';
 
 export default async function globalSetup() {
   const browser = await chromium.launch();
@@ -12,6 +13,7 @@ export default async function globalSetup() {
 
   try {
     await login(page);
+    await clearCartIfNotEmpty(page);
     await context.storageState({ path: 'auth.json' });
   } finally {
     await context.close();

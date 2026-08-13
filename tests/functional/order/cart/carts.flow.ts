@@ -31,3 +31,12 @@ export async function viewCartDetailsAndRemoveProduct(page: Page, productName: s
   await viewCartDetailsFromHomePage(page);
   await cartActions.clickRemoveItemButton(page, productName);
 }
+
+export async function clearCartIfNotEmpty(page: Page) {
+  await cartActions.clickFooterCartLink(page);
+
+  const removeButtons = cartActions.getRemoveButtons(page);
+  while ((await removeButtons.count()) > 0) {
+    await cartActions.clickFirstRemoveButton(page);
+  }
+}
