@@ -1,0 +1,11 @@
+node_modules/
+
+# Playwright runtime artifacts
+test-results/
+test-report/
+playwright-report/
+auth.json
+
+# Allure report artifacts
+allure-results/
+allure-report/
