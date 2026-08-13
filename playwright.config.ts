@@ -7,7 +7,7 @@ export default defineConfig({
   timeout: 60_000,
   expect: { timeout: 5_000 },
   retries: process.env.CI ? 2 : 0,
-  globalSetup: './global.setup.ts',
+  globalSetup: './tests/functional/global.setup.ts',
   reporter: [
     ['html', { outputFolder: 'test-report', open: 'never' }],
     ['list'],

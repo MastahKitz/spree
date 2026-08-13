@@ -1,7 +1,7 @@
 import { chromium, devices } from '@playwright/test';
-import { environment } from './tests/functional/config/environments';
-import { login } from './tests/functional/auth/auth.flow';
-import { clearCartIfNotEmpty } from './tests/functional/order/cart/carts.flow';
+import { environment } from './config/environments';
+import { login } from './auth/auth.flow';
+import { clearCartIfNotEmpty } from './order/cart/carts.flow';
 
 export default async function globalSetup() {
   const browser = await chromium.launch();
