@@ -1,7 +1,12 @@
 import { Page } from '@playwright/test';
 import * as authActions from './auth.actions';
+import { credentials } from '../config/credentials';
 
-export async function login(page: Page, email: string, password: string) {
+export async function login(
+  page: Page,
+  email: string = credentials.registeredUser.email,
+  password: string = credentials.registeredUser.password,
+) {
   await authActions.openHomePage(page);
   await authActions.clickAccountLink(page);
   await authActions.enterEmail(page, email);
