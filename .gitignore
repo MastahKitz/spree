@@ -1,5 +1,8 @@
 node_modules/
 
+# Local credentials (see tests/functional/config/.env.example) — never commit real values
+tests/functional/config/.env
+
 # Playwright runtime artifacts
 test-results/
 test-report/
