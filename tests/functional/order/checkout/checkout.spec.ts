@@ -1,7 +1,6 @@
 import { test } from '@playwright/test';
 import { openHomePage } from '../../auth/auth.actions';
 import { automaticEspressoMachine } from '../../product/product.data';
-import { credentials } from '../../config/credentials';
 import { addProductToCart } from '../cart/carts.flow';
 import { checkoutCart } from './checkout.flow';
 import { assertOrderConfirmation } from './checkout.assertions';
@@ -14,10 +13,7 @@ test.describe('checkout', { tag: '@checkout' }, () => {
     await addProductToCart(page, automaticEspressoMachine);
     await checkoutCart(page);
     await assertOrderConfirmation(page, {
-      firstName: credentials.registeredUser.name!.split(' ')[0],
-      email: credentials.registeredUser.email,
-      product: automaticEspressoMachine,
-      quantity: 1,
+      items: [{ product: automaticEspressoMachine, quantity: 1 }],
       shippingAddress: testShippingAddress,
     });
   });
