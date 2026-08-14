@@ -38,6 +38,9 @@ jobs:
       - name: Run Playwright tests
         run: npx playwright test
 
+      - name: Fail build if any test was flaky
+        run: node scripts/check-flaky.js test-report/results.json
+
       - name: Upload test report
         if: always()
         uses: actions/upload-artifact@v4
