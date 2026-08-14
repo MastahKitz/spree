@@ -10,12 +10,16 @@ export async function clickAddToCartButton(page: Page) {
 
 export async function clickViewCartLink(page: Page) {
   await page.getByRole('link', { name: 'View Cart' }).click();
-  await page.waitForTimeout(2000);  // temporary fix for cart load flakiness
+  await waitForCartPage(page);
 }
 
 export async function clickFooterCartLink(page: Page) {
   await page.getByRole('contentinfo').getByRole('link', { name: 'Cart', exact: true }).click();
-  await page.waitForTimeout(2000);  // temporary fix for cart load flakiness
+  await waitForCartPage(page);
+}
+
+async function waitForCartPage(page: Page) {
+  await page.getByRole('main').getByRole('heading', { level: 1 }).waitFor();
 }
 
 function quantityControls(page: Page, productName: string) {
