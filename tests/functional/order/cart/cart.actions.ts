@@ -15,7 +15,7 @@ export async function clickViewCartLink(page: Page) {
 
 export async function clickFooterCartLink(page: Page) {
   await page.getByRole('contentinfo').getByRole('link', { name: 'Cart', exact: true }).click();
-  await page.waitForTimeout(2000);
+  await page.waitForTimeout(2000);  // temporary fix for cart load flakiness
 }
 
 function quantityControls(page: Page, productName: string) {
