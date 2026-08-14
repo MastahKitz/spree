@@ -15,6 +15,7 @@ export default defineConfig({
   reporter: [
     ['html', { outputFolder: 'test-report', open: 'never' }],
     ['list'],
+    ['json', { outputFile: 'test-report/results.json' }],
   ],
   use: {
     baseURL: environment.demo.baseUrl,
@@ -22,6 +23,7 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     trace: 'retain-on-failure',
+    actionTimeout: 10_000,
   },
   outputDir: 'test-results',
   projects: [

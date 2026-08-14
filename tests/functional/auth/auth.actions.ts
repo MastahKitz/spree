@@ -3,11 +3,13 @@ import { Page } from '@playwright/test';
 export async function openHomePage(page: Page) {
   await page.goto('/');
   await page.getByRole('banner').waitFor();
+  await page.waitForTimeout(2000);  // temporary fix for page load flakiness
 }
 
 export async function clickAccountLink(page: Page) {
   await page.getByRole('banner').getByRole('link', { name: 'Account', exact: true }).click();
   await page.getByRole('main').getByText('My Account', { exact: true }).waitFor();
+  await page.waitForTimeout(2000);  // temporary fix for page load flakiness
 }
 
 export async function enterEmail(page: Page, email: string) {
