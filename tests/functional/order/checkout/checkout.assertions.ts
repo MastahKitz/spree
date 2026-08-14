@@ -1,14 +1,6 @@
 import { Page, expect } from '@playwright/test';
-import { CartItemData } from '../cart/cart.data';
-import { ShippingAddressData } from './checkout.data';
+import { OrderConfirmationData } from './checkout.data';
 import { credentials } from '../../config/credentials';
-
-export interface OrderConfirmationData {
-  firstName?: string;
-  email?: string;
-  items: CartItemData[];
-  shippingAddress: ShippingAddressData;
-}
 
 export async function assertOrderConfirmation(page: Page, order: OrderConfirmationData) {
   const firstName = order.firstName ?? credentials.registeredUser.name!.split(' ')[0];

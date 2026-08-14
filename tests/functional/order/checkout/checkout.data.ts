@@ -1,3 +1,5 @@
+import { CartItemData } from '../cart/cart.data';
+
 export interface ShippingAddressData {
   country: string;
   address: string;
@@ -13,6 +15,13 @@ export interface CardData {
   expiry: string;
   cvc: string;
   zip: string;
+}
+
+export interface OrderConfirmationData {
+  firstName?: string;
+  email?: string;
+  items: CartItemData[];
+  shippingAddress: ShippingAddressData;
 }
 
 export const testShippingAddress: ShippingAddressData = {
