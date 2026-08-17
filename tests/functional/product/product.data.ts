@@ -1,3 +1,5 @@
+export const TOTAL_PRODUCTS_COUNT = 36;
+
 export interface ProductData {
   name: string;
   category: string;
