@@ -14,6 +14,10 @@ permissions:
 
 jobs:
   review:
+    # Skip PRs opened by bots (e.g. the known-failure marker PRs from
+    # test-failure-analysis.yml) — this review is for human-authored test
+    # changes, and claude-code-action refuses to run for a bot actor anyway.
+    if: github.event.pull_request.user.type != 'Bot'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
