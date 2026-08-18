@@ -8,6 +8,11 @@ export async function viewProductDetailsViaAllProducts(page: Page, product: Prod
   await productActions.clickProduct(page, product.name);
 }
 
+export async function viewAllProducts(page: Page) {
+  await productActions.clickOpenMenuButton(page);
+  await productActions.clickAllProductsLink(page);
+}
+
 export async function viewProductDetailsViaCategoryMenu(page: Page, product: ProductData) {
   await productActions.clickOpenMenuButton(page);
   await productActions.clickCategoryMenuItem(page, product.category);
