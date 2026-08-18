@@ -1,0 +1,81 @@
+# Task: analyze this CI run's Playwright failures and propose next steps
+
+This is a post-merge run against the live demo storefront. Some test(s) failed (or were flaky —
+passed only after retry, which we also treat as a build failure). Your job is **triage, not
+fixing**: figure out, per failure, whether it looks like a real product bug or a problem with the
+test script itself, avoid re-reporting failures that are already tracked, and propose a concrete
+next step. A human approves or declines your suggestions afterward — never edit test logic, only
+ever add/update the known-failure marker comments described below, and only ever land those via a
+PR, never by pushing to main directly.
+
+## Evidence available
+
+- `test-report/results.json` — the Playwright JSON reporter output for this run. Walk `suites` →
+  `specs` → `tests` to find every test with `status` `unexpected` (failed) or `flaky`. Each entry
+  has the error message, stack trace (including the failing file:line), and expected/actual
+  snippets where relevant.
+- `test-results/**/test-failed-*.png` — a screenshot of the page at the moment of failure, one per
+  failed attempt. Read the image for the failing test to see what the page actually looked like
+  (error banner, empty cart, wrong price, blank page, etc.) — this is often the fastest way to
+  tell a real bug from a bad selector.
+- The test source itself: use Grep/Glob to find the failing spec under `tests/functional/**` and
+  read its `.spec.ts`, `.flow.ts`, `.actions.ts`, and `.assertions.ts` siblings to understand what
+  was actually being checked and how.
+
+## Step 1 — check for an existing marker before treating a failure as new
+
+Known failures are tracked with a marker comment placed on the line immediately above the
+assertion/action that failed, in this exact format:
+
+```
+// KNOWN-FAILURE(#123): <short reason> — retriage if this changes
+```
+
+For each failing/flaky test from `results.json`, open the file:line from its stack trace and check
+the line directly above it:
+
+- **No marker present** → this is a new failure. Go to Step 2.
+- **Marker present, and `gh issue view <N> --json state` shows it's still open** → already
+  tracked, do not file another issue and do not touch the marker. Just note it in your final
+  summary as "already tracked as #N".
+- **Marker present, but the linked issue is closed** → this is a regression (supposedly fixed,
+  failing again). Treat it as new: go to Step 2, and in Step 3 replace the stale marker with one
+  pointing at the new issue instead of leaving the old (wrong) one in place.
+
+## Step 2 — classify each new/regressed failure
+
+1. **What was being asserted** (in plain English).
+2. **What actually happened**, from the error/screenshot.
+3. **A classification**:
+   - **Likely product bug** — the app behaved incorrectly; the test caught something real.
+   - **Likely script issue** — the test itself is wrong or brittle (stale locator, wrong
+     assumption, timing/flake in the test's own waiting, hardcoded data that changed), not a
+     product problem.
+   - **Inconclusive** — not enough evidence to tell; say what additional info would resolve it.
+4. **A suggested action item** — specific enough to act on, e.g. "update the `getByRole(...)`
+   locator in `checkout.actions.ts` — the button's accessible name changed from X to Y" or "file a
+   bug: adding a second item does not update the cart subtotal." Not "investigate further" unless
+   truly inconclusive.
+
+For each new/regressed failure, create a GitHub issue (`gh issue create`) titled
+`<test title> — <file>` containing the four points above and a link to the run (the RUN URL given
+to you in the prompt). Note the issue number it returns — you'll need it for Step 3.
+
+## Step 3 — open one PR with the marker comments
+
+If you filed one or more issues in Step 2:
+
+1. `git checkout -b qa/known-failures-run-<RUN ID>` (RUN ID given to you in the prompt).
+2. `git config user.name` / `user.email` to a bot identity, e.g. `qa-triage-bot` /
+   `qa-triage-bot@users.noreply.github.com`.
+3. For each new/regressed failure, add (or replace the stale) `KNOWN-FAILURE(#N)` marker comment
+   on the line above the failing assertion/action, using the issue number you just created.
+4. Commit only these marker-comment lines (no other changes), push the branch, and
+   `gh pr create` titled `Mark known QA failures (run #<RUN ID>)` with a body listing each
+   failure, its classification, and the issue it links to.
+
+If every failure in this run was already tracked (all markers pointed at open issues), skip
+issue/PR creation entirely and just report that in your final response — don't manufacture work.
+
+If, after investigating, you find no actual failing/flaky tests (e.g. the build failed for an
+unrelated infra reason), say so instead of filing anything.
