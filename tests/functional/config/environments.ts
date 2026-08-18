@@ -2,12 +2,14 @@ export interface EnvironmentConfig {
   baseUrl: string;
 }
 
-// Target under test. Defaults to the public Spree demo storefront, but can be
-// pointed elsewhere via QA_BASE_URL.
-const DEFAULT_BASE_URL = 'https://demo.spreecommerce.org/';
-
-export const environment = {
+const environments: Record<string, EnvironmentConfig> = {
   demo: {
-    baseUrl: process.env.QA_BASE_URL || DEFAULT_BASE_URL,
-  } as EnvironmentConfig,
+    baseUrl: 'https://demo.spreecommerce.org/',
+  },
+  // Add more environments here, e.g.:
+  // staging: { baseUrl: 'https://staging.spreecommerce.org/' },
 };
+
+const envName = process.env.QA_ENV || 'demo';
+
+export const environment = environments[envName];

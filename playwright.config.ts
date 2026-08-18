@@ -18,7 +18,7 @@ export default defineConfig({
     ['json', { outputFile: 'test-report/results.json' }],
   ],
   use: {
-    baseURL: environment.demo.baseUrl,
+    baseURL: environment.baseUrl,
     storageState: 'auth.json',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',

@@ -7,7 +7,7 @@ export default async function globalSetup() {
   const browser = await chromium.launch();
   const context = await browser.newContext({
     ...devices['Desktop Chrome'],
-    baseURL: environment.demo.baseUrl,
+    baseURL: environment.baseUrl,
   });
   const page = await context.newPage();
 
