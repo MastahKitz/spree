@@ -8,6 +8,17 @@ next step. A human approves or declines your suggestions afterward — never edi
 ever add/update the known-failure marker comments described below, and only ever land those via a
 PR, never by pushing to main directly.
 
+Your tool access here is deliberately narrow (only `Read`/`Grep`/`Glob`/`Edit` and a short list of
+specific `git`/`gh` subcommands — no general `Bash`, no `jq`, no `python3`, no piped/chained shell
+commands). Everything you need is reachable with the allowed tools; reach for those directly rather
+than probing for `jq`, `python3 -c`, `gh run view`, or shell pipes — those aren't granted here and
+attempting them just burns turns on denied calls instead of doing the actual analysis. In
+particular: read `test-report/results.json` and the `.png` screenshots directly with `Read` (it
+parses JSON and renders images natively — you don't need `jq`/`python3` to walk the JSON structure
+described below), and use `Grep`/`Glob` for anything you'd otherwise reach for `find`/`grep`/`cat`
+to do. You already have the RUN ID/URL/COMMIT from the prompt below, so there's no need to look up
+run metadata via `gh run view` either.
+
 ## Evidence available
 
 - `test-report/results.json` — the Playwright JSON reporter output for this run. Walk `suites` →
