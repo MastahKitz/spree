@@ -9,6 +9,7 @@ export async function clickAddToCartButton(page: Page) {
 }
 
 export async function clickViewCartLink(page: Page) {
+  // KNOWN-FAILURE(#21): viewCartDetails skips clickOpenCartButton before this, so the View Cart link never appears — retriage if this changes
   await page.getByRole('link', { name: 'View Cart' }).click();
   await waitForCartPage(page);
 }
