@@ -32,6 +32,15 @@ run metadata via `gh run view` either.
   price, blank page, etc. If a popup or banner has visible text, transcribe it verbatim into your
   analysis; this is direct evidence of what happened and takes priority over any theory built
   purely from reading/comparing code paths.
+- `test-results/**/video-frames/frame-*.png` — frames sampled at 2fps from that attempt's video
+  recording (pre-extracted by the workflow; the raw `.webm` next to them is not readable by you, so
+  don't try to open it directly). **If the single failure screenshot looks unremarkable — a normal,
+  static-looking page with nothing obviously wrong — check these frames before concluding there was
+  no error.** The screenshot is one instant in time; this app shows some errors as toasts/popups
+  that appear a moment after an action and self-dismiss a few seconds later, so a transient error
+  can easily be gone by the time the failure screenshot fires while still being visible across
+  several consecutive video frames. Skim frames in order for anything that appears and then
+  vanishes — that's the signal, not what's on screen at the last frame.
 - The test source itself: use Grep/Glob to find the failing spec under `tests/functional/**` and
   read its `.spec.ts`, `.flow.ts`, `.actions.ts`, and `.assertions.ts` siblings to understand what
   was actually being checked and how. Use this to understand the flow, but do not let it override
