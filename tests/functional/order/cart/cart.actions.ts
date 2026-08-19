@@ -9,6 +9,7 @@ export async function clickAddToCartButton(page: Page) {
 }
 
 export async function clickViewCartLink(page: Page) {
+  // KNOWN-FAILURE(#25): demo sandbox monthly order-limit (100/mo) blocks add-to-cart — retriage if this changes
   await page.getByRole('link', { name: 'View Cart' }).click();
   await waitForCartPage(page);
 }
