@@ -15,12 +15,18 @@ PR, never by pushing to main directly.
   has the error message, stack trace (including the failing file:line), and expected/actual
   snippets where relevant.
 - `test-results/**/test-failed-*.png` — a screenshot of the page at the moment of failure, one per
-  failed attempt. Read the image for the failing test to see what the page actually looked like
-  (error banner, empty cart, wrong price, blank page, etc.) — this is often the fastest way to
-  tell a real bug from a bad selector.
+  failed attempt. **You must open and read this screenshot for every failing/flaky test before
+  forming a theory of the root cause.** Look specifically for anything overlaid on the page —
+  modal dialogs, popups, toasts, banners, alert text — as well as error banners, empty cart, wrong
+  price, blank page, etc. If a popup or banner has visible text, transcribe it verbatim into your
+  analysis; this is direct evidence of what happened and takes priority over any theory built
+  purely from reading/comparing code paths.
 - The test source itself: use Grep/Glob to find the failing spec under `tests/functional/**` and
   read its `.spec.ts`, `.flow.ts`, `.actions.ts`, and `.assertions.ts` siblings to understand what
-  was actually being checked and how.
+  was actually being checked and how. Use this to understand the flow, but do not let it override
+  what the screenshot actually shows — a plausible-looking code-path explanation (e.g. "a
+  preceding step was skipped") is not a substitute for confirming, from the screenshot, what state
+  the page was actually in when the failure occurred.
 
 ## Step 1 — check for an existing marker before treating a failure as new
 
@@ -45,7 +51,8 @@ the line directly above it:
 ## Step 2 — classify each new/regressed failure
 
 1. **What was being asserted** (in plain English).
-2. **What actually happened**, from the error/screenshot.
+2. **What actually happened**, grounded in the screenshot for that failure (not just the error
+   message/stack) — state plainly what was on screen, including any popup/dialog/banner text.
 3. **A classification**:
    - **Likely product bug** — the app behaved incorrectly; the test caught something real.
    - **Likely script issue** — the test itself is wrong or brittle (stale locator, wrong
