@@ -43,6 +43,18 @@ jobs:
           run-id: ${{ github.event.workflow_run.id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Install ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
+      - name: Extract video frames from failed attempts
+        run: |
+          shopt -s globstar nullglob
+          for video in test-results/**/video.webm; do
+            dir=$(dirname "$video")
+            mkdir -p "$dir/video-frames"
+            ffmpeg -loglevel error -i "$video" -vf fps=2 "$dir/video-frames/frame-%03d.png"
+          done
+
       - name: Load failure analysis prompt
         run: |
           {
@@ -55,6 +67,7 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          show_full_output: true
           prompt: |
             REPO: ${{ github.repository }}
             RUN ID: ${{ github.event.workflow_run.id }}

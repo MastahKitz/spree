@@ -8,6 +8,17 @@ next step. A human approves or declines your suggestions afterward — never edi
 ever add/update the known-failure marker comments described below, and only ever land those via a
 PR, never by pushing to main directly.
 
+Your tool access here is deliberately narrow (only `Read`/`Grep`/`Glob`/`Edit` and a short list of
+specific `git`/`gh` subcommands — no general `Bash`, no `jq`, no `python3`, no piped/chained shell
+commands). Everything you need is reachable with the allowed tools; reach for those directly rather
+than probing for `jq`, `python3 -c`, `gh run view`, or shell pipes — those aren't granted here and
+attempting them just burns turns on denied calls instead of doing the actual analysis. In
+particular: read `test-report/results.json` and the `.png` screenshots directly with `Read` (it
+parses JSON and renders images natively — you don't need `jq`/`python3` to walk the JSON structure
+described below), and use `Grep`/`Glob` for anything you'd otherwise reach for `find`/`grep`/`cat`
+to do. You already have the RUN ID/URL/COMMIT from the prompt below, so there's no need to look up
+run metadata via `gh run view` either.
+
 ## Evidence available
 
 - `test-report/results.json` — the Playwright JSON reporter output for this run. Walk `suites` →
@@ -15,12 +26,27 @@ PR, never by pushing to main directly.
   has the error message, stack trace (including the failing file:line), and expected/actual
   snippets where relevant.
 - `test-results/**/test-failed-*.png` — a screenshot of the page at the moment of failure, one per
-  failed attempt. Read the image for the failing test to see what the page actually looked like
-  (error banner, empty cart, wrong price, blank page, etc.) — this is often the fastest way to
-  tell a real bug from a bad selector.
+  failed attempt. **You must open and read this screenshot for every failing/flaky test before
+  forming a theory of the root cause.** Look specifically for anything overlaid on the page —
+  modal dialogs, popups, toasts, banners, alert text — as well as error banners, empty cart, wrong
+  price, blank page, etc. If a popup or banner has visible text, transcribe it verbatim into your
+  analysis; this is direct evidence of what happened and takes priority over any theory built
+  purely from reading/comparing code paths.
+- `test-results/**/video-frames/frame-*.png` — frames sampled at 2fps from that attempt's video
+  recording (pre-extracted by the workflow; the raw `.webm` next to them is not readable by you, so
+  don't try to open it directly). **If the single failure screenshot looks unremarkable — a normal,
+  static-looking page with nothing obviously wrong — check these frames before concluding there was
+  no error.** The screenshot is one instant in time; this app shows some errors as toasts/popups
+  that appear a moment after an action and self-dismiss a few seconds later, so a transient error
+  can easily be gone by the time the failure screenshot fires while still being visible across
+  several consecutive video frames. Skim frames in order for anything that appears and then
+  vanishes — that's the signal, not what's on screen at the last frame.
 - The test source itself: use Grep/Glob to find the failing spec under `tests/functional/**` and
   read its `.spec.ts`, `.flow.ts`, `.actions.ts`, and `.assertions.ts` siblings to understand what
-  was actually being checked and how.
+  was actually being checked and how. Use this to understand the flow, but do not let it override
+  what the screenshot actually shows — a plausible-looking code-path explanation (e.g. "a
+  preceding step was skipped") is not a substitute for confirming, from the screenshot, what state
+  the page was actually in when the failure occurred.
 
 ## Step 1 — check for an existing marker before treating a failure as new
 
@@ -45,7 +71,8 @@ the line directly above it:
 ## Step 2 — classify each new/regressed failure
 
 1. **What was being asserted** (in plain English).
-2. **What actually happened**, from the error/screenshot.
+2. **What actually happened**, grounded in the screenshot for that failure (not just the error
+   message/stack) — state plainly what was on screen, including any popup/dialog/banner text.
 3. **A classification**:
    - **Likely product bug** — the app behaved incorrectly; the test caught something real.
    - **Likely script issue** — the test itself is wrong or brittle (stale locator, wrong
