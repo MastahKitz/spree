@@ -9,7 +9,6 @@ export async function clickAddToCartButton(page: Page) {
 }
 
 export async function clickViewCartLink(page: Page) {
-  // KNOWN-FAILURE(#14): "View Cart" link never appears when called right after add-to-cart without opening the cart flyout first — retriage if this changes
   await page.getByRole('link', { name: 'View Cart' }).click();
   await waitForCartPage(page);
 }
