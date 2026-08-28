@@ -24,5 +24,6 @@ export async function clickSubcategoryMenuItem(page: Page, subcategory: string) 
 }
 
 async function waitForPageHeading(page: Page, name: string) {
+  await page.waitForLoadState('networkidle');
   await page.getByRole('heading', { name, level: 1, exact: true }).waitFor();
 }
