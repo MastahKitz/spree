@@ -2,7 +2,7 @@ import { Page } from '@playwright/test';
 
 export async function openHomePage(page: Page) {
   await page.goto('/');
-  await page.waitForLoadState('networkidle');
+  await page.getByRole('banner').waitFor();
 }
 
 export async function clickAccountLink(page: Page) {
