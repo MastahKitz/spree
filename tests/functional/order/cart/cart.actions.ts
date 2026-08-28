@@ -9,6 +9,7 @@ export async function clickAddToCartButton(page: Page) {
 }
 
 export async function clickViewCartLink(page: Page) {
+  // KNOWN-FAILURE(#29): demo sandbox monthly order cap (500/mo) blocks add-to-cart, so this link never appears — retriage if this changes
   await page.getByRole('link', { name: 'View Cart' }).click();
   await waitForCartPage(page);
 }
