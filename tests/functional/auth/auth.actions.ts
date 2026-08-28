@@ -7,7 +7,7 @@ export async function openHomePage(page: Page) {
 
 export async function clickAccountLink(page: Page) {
   await page.getByRole('banner').getByRole('link', { name: 'Account', exact: true }).click();
-  await page.waitForLoadState('networkidle');
+  await page.getByRole('main').getByText('My Account', { exact: true }).waitFor();
 }
 
 export async function enterEmail(page: Page, email: string) {
