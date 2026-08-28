@@ -2,7 +2,7 @@ import { Page } from '@playwright/test';
 
 export async function clickAllProductsLink(page: Page) {
   await page.getByRole('dialog').getByRole('link', { name: 'All Products', exact: true }).click();
-  await page.waitForLoadState('networkidle');
+  await waitForPageHeading(page, 'All Products');
 }
 
 export async function clickProduct(page: Page, name: string) {
