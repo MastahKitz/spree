@@ -20,7 +20,7 @@ export async function clickCategoryMenuItem(page: Page, category: string) {
 
 export async function clickSubcategoryMenuItem(page: Page, subcategory: string) {
   await page.getByRole('dialog').getByRole('link', { name: subcategory, exact: true }).click();
-  await page.waitForLoadState('networkidle');
+  await waitForPageHeading(page, subcategory);
 }
 
 async function waitForPageHeading(page: Page, name: string) {
